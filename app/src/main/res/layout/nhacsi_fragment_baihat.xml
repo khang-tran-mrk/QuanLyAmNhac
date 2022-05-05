@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swiperefresh_bh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/text_home"
+                android:layout_width="86dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Tác giả :"
+
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/ten_ns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Trịnh Công Sơn"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_th_table"
+                    android:padding="5dp"
+                    android:text="Mã BH" />
+
+                <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_th_table"
+                    android:padding="5dp"
+                    android:text="Tên bài hát" />
+
+                <TextView
+                    android:layout_width="105dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_th_table"
+                    android:padding="5dp"
+                    android:text="Năm ST" />
+
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/lv_baihatofnhacsi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/border_table"
+                android:divider="@color/primary"
+                android:dividerHeight="10dp"
+                 />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_bieudien"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="8dp"
+            android:text="Thông tin biễu diễn bài hát: "
+
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ten_bh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="100dp"
+            android:textStyle="bold"
+            android:text="Vui lòng chọn bài hát !"
+
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="334dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="30dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_th_table"
+                    android:padding="5dp"
+                    android:text="Mã BD" />
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_th_table"
+                    android:padding="5dp"
+                    android:text="Mã CS" />
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_th_table"
+                    android:padding="5dp"
+                    android:text="Tên ca sĩ" />
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_th_table"
+                    android:padding="5dp"
+                    android:text="Ngày BD" />
+
+                <TextView
+                    android:layout_width="75dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_th_table"
+                    android:padding="5dp"
+                    android:text="Địa điểm" />
+
+
+            </LinearLayout>
+            <ListView
+                android:id="@+id/lv_bieudienforbaihat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/border_table"
+                android:divider="@color/primary"
+                android:dividerHeight="10dp" />
+
+            <android.widget.Button
+                android:id="@+id/btn_back_bhforns"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_margin="20dp"
+                android:background="@drawable/border_radius"
+                android:text="Trở lại " />
+
+
+        </LinearLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
