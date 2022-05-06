@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import com.example.quanlyamnhac.Database;
@@ -32,6 +33,7 @@ import com.example.quanlyamnhac.model.BieuDienModel;
 import com.example.quanlyamnhac.model.NhacSiModel;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class NhacSiFragment extends Fragment {
 
@@ -44,6 +46,7 @@ public class NhacSiFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.nhacsi_fragment, container, false);
         final ListView lv_tablemusician = root.findViewById(R.id.lv_tablemusician);
+        SearchView search_bar = root.findViewById(R.id.search_bar);
 
         MusicianArrayList = new ArrayList<>();
         CustomAdapterNhacSi adapter = new CustomAdapterNhacSi(getContext(), R.layout.nhacsi_item_list_view, MusicianArrayList);
@@ -56,8 +59,8 @@ public class NhacSiFragment extends Fragment {
        // database.QueryData("DROP TABLE BieuDien");
         database.QueryData("CREATE TABLE IF NOT EXISTS BieuDien(MaBieuDien INTEGER PRIMARY KEY autoincrement  ,MaBaiHat VARCHAR(200) NOT NULL, MaCaSi VARCHAR(200) NOT NULL ,  NgayBieuDien VARCHAR(200) , DiaDiem VARCHAR(200) , FOREIGN KEY (MaBaiHat) REFERENCES BaiHat(MaBaiHat))");
         database.QueryData("CREATE TABLE IF NOT EXISTS CaSi(MaCaSi VARCHAR(200) PRIMARY KEY NOT NULL, TenCaSi VARCHAR(200) )"); //
+
         Cursor data = database.GetData("SELECT * FROM NhacSi");
-        MusicianArrayList.clear();
         MusicianArrayList.clear();
         while (data.moveToNext()) {
             String id = data.getString(0);
@@ -67,6 +70,33 @@ public class NhacSiFragment extends Fragment {
         }
         lv_tablemusician.setClickable(true);
 
+        //Search
+        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ArrayList<NhacSiModel> search_result = new ArrayList<NhacSiModel>();
+
+                MusicianArrayList.forEach(item -> {
+                    if(
+                        item.getName().toLowerCase().contains(newText.toLowerCase()) ||
+                        item.getId().toLowerCase().contains(newText.toLowerCase())
+                    )
+                        search_result.add(item);
+                });
+                CustomAdapterNhacSi new_adapter = new CustomAdapterNhacSi(getContext(), R.layout.nhacsi_item_list_view, search_result);
+                lv_tablemusician.setAdapter(new_adapter);
+                return false;
+            }
+        });
+
+
+
+        //Click item
         lv_tablemusician.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -159,6 +189,7 @@ public class NhacSiFragment extends Fragment {
             }
         });
 
+        //Edit, Delete?
         lv_tablemusician.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 

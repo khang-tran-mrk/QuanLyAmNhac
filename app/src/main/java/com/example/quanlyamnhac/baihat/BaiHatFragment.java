@@ -67,7 +67,7 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
         adapter = new CustomAdapterBaiHat(getContext(), R.layout.baihat_item_list_view, baiHatArrayList);
         lv_tableBaiHat.setAdapter(adapter);
 
-        //database.QueryData("CREATE TABLE IF NOT EXISTS BaiHat(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaBaiHat VARCHAR(200), TenBaiHat VARCHAR(200), NamSangTac VARCHAR(200), MaNhacSi VARCHAR(200), foreign key (MaNhacSi) references NhacSi)");
+        database.QueryData("CREATE TABLE IF NOT EXISTS BaiHat(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaBaiHat VARCHAR(200), TenBaiHat VARCHAR(200), NamSangTac VARCHAR(200), MaNhacSi VARCHAR(200), foreign key (MaNhacSi) references NhacSi)");
 
         Cursor dataBaiHat = database.GetData("SELECT * FROM BaiHat ");
         baiHatArrayList.clear();
