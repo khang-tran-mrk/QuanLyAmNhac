@@ -33,7 +33,6 @@ import com.example.quanlyamnhac.model.BieuDienModel;
 import com.example.quanlyamnhac.model.NhacSiModel;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class NhacSiFragment extends Fragment {
 
@@ -52,51 +51,17 @@ public class NhacSiFragment extends Fragment {
         CustomAdapterNhacSi adapter = new CustomAdapterNhacSi(getContext(), R.layout.nhacsi_item_list_view, MusicianArrayList);
         lv_tablemusician.setAdapter(adapter);
 
+
         database = new Database(getContext(), "QuanLyAmNhac.sqlite", null, 1);
 
-        database.QueryData("CREATE TABLE IF NOT EXISTS NhacSi(MaNhacSi VARCHAR(200) PRIMARY KEY NOT NULL, TenNhacSi VARCHAR(200) NOT NULL)");
-        database.QueryData("CREATE TABLE IF NOT EXISTS BaiHat(MaBaiHat VARCHAR(200) PRIMARY KEY NOT NULL, TenBaiHat VARCHAR(200) NOT NULL, NamSangTac VARCHAR(200) NOT NULL, MaNhacSi VARCHAR(200) NOT NULL, FOREIGN KEY (MaNhacSi) REFERENCES NhacSi(MaNhacSi))");
-       // database.QueryData("DROP TABLE BieuDien");
-        database.QueryData("CREATE TABLE IF NOT EXISTS BieuDien(MaBieuDien INTEGER PRIMARY KEY autoincrement  ,MaBaiHat VARCHAR(200) NOT NULL, MaCaSi VARCHAR(200) NOT NULL ,  NgayBieuDien VARCHAR(200) , DiaDiem VARCHAR(200) , FOREIGN KEY (MaBaiHat) REFERENCES BaiHat(MaBaiHat))");
-        database.QueryData("CREATE TABLE IF NOT EXISTS CaSi(MaCaSi VARCHAR(200) PRIMARY KEY NOT NULL, TenCaSi VARCHAR(200) )"); //
+        getList_NhacSi();
+        adapter.notifyDataSetChanged();
 
-        Cursor data = database.GetData("SELECT * FROM NhacSi");
-        MusicianArrayList.clear();
-        while (data.moveToNext()) {
-            String id = data.getString(0);
-            String name = data.getString(1);
+        //tao table trong db neu chua co
+        init_db();
 
-            MusicianArrayList.add(new NhacSiModel(id, name));
-        }
         lv_tablemusician.setClickable(true);
 
-        //Search
-        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                ArrayList<NhacSiModel> search_result = new ArrayList<NhacSiModel>();
-
-                MusicianArrayList.forEach(item -> {
-                    if(
-                        item.getName().toLowerCase().contains(newText.toLowerCase()) ||
-                        item.getId().toLowerCase().contains(newText.toLowerCase())
-                    )
-                        search_result.add(item);
-                });
-                CustomAdapterNhacSi new_adapter = new CustomAdapterNhacSi(getContext(), R.layout.nhacsi_item_list_view, search_result);
-                lv_tablemusician.setAdapter(new_adapter);
-                return false;
-            }
-        });
-
-
-
-        //Click item
         lv_tablemusician.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -110,22 +75,21 @@ public class NhacSiFragment extends Fragment {
                         AlertDialog.Builder fix = new AlertDialog.Builder(getContext());
                         fix.setView(baihatfornhacsi_layout);
 
-                        TextView ten_ns =  baihatfornhacsi_layout.findViewById(R.id.ten_ns);
-                        TextView ten_bh =  baihatfornhacsi_layout.findViewById(R.id.ten_bh);
+                        TextView ten_ns = baihatfornhacsi_layout.findViewById(R.id.ten_ns);
+                        TextView ten_bh = baihatfornhacsi_layout.findViewById(R.id.ten_bh);
                         final ListView lv_baihatofnhacsi = baihatfornhacsi_layout.findViewById(R.id.lv_baihatofnhacsi);
-                       // final ListView bh_for_ns_name = baihatfornhacsi_layout.findViewById(R.id.bh_tenbaihat);
+                        // final ListView bh_for_ns_name = baihatfornhacsi_layout.findViewById(R.id.bh_tenbaihat);
                         final ListView lv_bieudienforbaihat = baihatfornhacsi_layout.findViewById(R.id.lv_bieudienforbaihat);
-                        Button btn_back_bhforns =  baihatfornhacsi_layout.findViewById(R.id.btn_back_bhforns);
+                        Button btn_back_bhforns = baihatfornhacsi_layout.findViewById(R.id.btn_back_bhforns);
 
-                        ArrayList<BaiHatModel> BaiHatArrayList;
-                        BaiHatArrayList = new ArrayList<>();
+                        ArrayList<BaiHatModel> BaiHatArrayList = new ArrayList<>();
 
                         CustomAdapterBaiHat adapterbh = new CustomAdapterBaiHat(getContext(), R.layout.nhacsi_item_listbaihat_view, BaiHatArrayList);
                         lv_baihatofnhacsi.setAdapter(adapterbh);
 
                         //System.out.println("ma nhac si la :" + MusicianArrayList.get(position).getId());
                         ten_ns.setText(MusicianArrayList.get(position).getName());
-                        Cursor dataBaiHat = database.GetData("SELECT * FROM BaiHat  where MaNhacSi ='" + MusicianArrayList.get(position).getId() +"'");
+                        Cursor dataBaiHat = database.GetData("SELECT * FROM BaiHat  where MaNhacSi ='" + MusicianArrayList.get(position).getId() + "'");
                         BaiHatArrayList.clear();
                         while (dataBaiHat.moveToNext()) {
                             String mabaihat = dataBaiHat.getString(0);
@@ -138,18 +102,17 @@ public class NhacSiFragment extends Fragment {
                         adapterbh.notifyDataSetChanged();
 
 
-
                         lv_baihatofnhacsi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                              //  Toast.makeText(getContext(), "vao duoc funtion", Toast.LENGTH_SHORT).show();
+                                //  Toast.makeText(getContext(), "vao duoc funtion", Toast.LENGTH_SHORT).show();
                                 ArrayList<BieuDienModel> bieuDienArrayList;
                                 bieuDienArrayList = new ArrayList<>();
                                 CustomAdapterBieuDien adapterbd = new CustomAdapterBieuDien(getContext(), R.layout.nhacsi_item_baihat_listbieudien, bieuDienArrayList);
                                 lv_bieudienforbaihat.setAdapter(adapterbd);
                                 ten_bh.setText(BaiHatArrayList.get(i).getTenBaiHat());
-                               // Toast.makeText(getContext(), "vao duoc funtion =" + BaiHatArrayList.get(i).getMaBaiHat(), Toast.LENGTH_SHORT).show();
-                                Cursor dataBieuDien = database.GetData("SELECT * FROM BieuDien where  MaBaiHat = '" + BaiHatArrayList.get(i).getMaBaiHat() +"'");
+                                // Toast.makeText(getContext(), "vao duoc funtion =" + BaiHatArrayList.get(i).getMaBaiHat(), Toast.LENGTH_SHORT).show();
+                                Cursor dataBieuDien = database.GetData("SELECT * FROM BieuDien where  MaBaiHat = '" + BaiHatArrayList.get(i).getMaBaiHat() + "'");
                                 bieuDienArrayList.clear();
                                 while (dataBieuDien.moveToNext()) {
                                     Integer id = Integer.parseInt(dataBieuDien.getString(0));
@@ -180,8 +143,6 @@ public class NhacSiFragment extends Fragment {
                         alertDialog.show();
 
 
-
-
                     }
                 });
                 alert.show();
@@ -189,14 +150,12 @@ public class NhacSiFragment extends Fragment {
             }
         });
 
-        //Edit, Delete?
         lv_tablemusician.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 final View update_layout = inflater.inflate(R.layout.nhacsi_fragment_update, null);
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext()); // modal poppup
                 alert.setMessage("Thực hiện thao tác");
-
 
 
                 alert.setPositiveButton("Sửa", new DialogInterface.OnClickListener() {
@@ -208,8 +167,8 @@ public class NhacSiFragment extends Fragment {
                         EditText up_MaNS = (EditText) update_layout.findViewById(R.id.editma);
                         EditText up_tennhacsi = (EditText) update_layout.findViewById(R.id.editname);
 
-                       Button btn_up_ns = (Button) update_layout.findViewById(R.id.btnUpdateNS);
-                       Button btnBacKNS = (Button) update_layout.findViewById(R.id.btnBacKNS);
+                        Button btn_up_ns = (Button) update_layout.findViewById(R.id.btnUpdateNS);
+                        Button btnBacKNS = (Button) update_layout.findViewById(R.id.btnBacKNS);
                         up_MaNS.setText(MusicianArrayList.get(position).getId());
                         up_tennhacsi.setText(MusicianArrayList.get(position).getName());
 
@@ -232,15 +191,14 @@ public class NhacSiFragment extends Fragment {
                         btn_up_ns.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                               Log.d("abc","" + position);
-                                Log.d("abc","" + up_tennhacsi.getText());
+                                Log.d("abc", "" + position);
+                                Log.d("abc", "" + up_tennhacsi.getText());
                                 database.QueryData("UPDATE NhacSi SET TenNhacSi  = '" + up_tennhacsi.getText().toString() + "' where MaNhacSi='" + MusicianArrayList.get(position).getId() + "'");
-                                    String name = up_tennhacsi.getText().toString();
-                                MusicianArrayList.set(position,new NhacSiModel(MusicianArrayList.get(position).getId(), name));
+                                String name = up_tennhacsi.getText().toString();
+                                MusicianArrayList.set(position, new NhacSiModel(MusicianArrayList.get(position).getId(), name));
                                 adapter.notifyDataSetChanged();
 
                                 alertDialog.dismiss();
-
 
 
                             }
@@ -256,8 +214,8 @@ public class NhacSiFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                         System.out.println("xoa ne !! = " + MusicianArrayList.get(position).getId());
-                        database.QueryData("DELETE FROM NhacSi WHERE MaNhacSi   = '" + MusicianArrayList.get(position).getId() +"'");
-                               MusicianArrayList.remove(position);
+                        database.QueryData("DELETE FROM NhacSi WHERE MaNhacSi   = '" + MusicianArrayList.get(position).getId() + "'");
+                        MusicianArrayList.remove(position);
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -267,8 +225,61 @@ public class NhacSiFragment extends Fragment {
             }
         });
 
+        //Search
+        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                CustomAdapterNhacSi new_adapter;
+
+                if(newText.equals("") || newText.equals(null)){
+                    getList_NhacSi();
+                    lv_tablemusician.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    return false;
+                }
+
+
+                ArrayList<NhacSiModel> search_result = new ArrayList<NhacSiModel>();
+                MusicianArrayList.forEach(item -> {
+                    if (
+                            item.getName().toLowerCase().contains(newText.toLowerCase()) ||
+                                    item.getId().toLowerCase().contains(newText.toLowerCase())
+                    )
+                        search_result.add(item);
+                });
+                MusicianArrayList = search_result;
+                new_adapter = new CustomAdapterNhacSi(getContext(), R.layout.nhacsi_item_list_view, search_result);
+                lv_tablemusician.setAdapter(new_adapter);
+
+                return false;
+            }
+        });
         return root;
+    }
+
+    private void init_db() {
+        // database.QueryData("DROP TABLE NhacSi");
+        database.QueryData("CREATE TABLE IF NOT EXISTS NhacSi(MaNhacSi VARCHAR(200) PRIMARY KEY NOT NULL, TenNhacSi VARCHAR(200) NOT NULL, HinhAnh BLOB)");
+        database.QueryData("CREATE TABLE IF NOT EXISTS BaiHat(MaBaiHat VARCHAR(200) PRIMARY KEY NOT NULL, TenBaiHat VARCHAR(200) NOT NULL, NamSangTac VARCHAR(200) NOT NULL, MaNhacSi VARCHAR(200) NOT NULL, FOREIGN KEY (MaNhacSi) REFERENCES NhacSi(MaNhacSi))");
+        // database.QueryData("DROP TABLE BieuDien");
+        database.QueryData("CREATE TABLE IF NOT EXISTS BieuDien(MaBieuDien INTEGER PRIMARY KEY autoincrement  ,MaBaiHat VARCHAR(200) NOT NULL, MaCaSi VARCHAR(200) NOT NULL ,  NgayBieuDien VARCHAR(200) , DiaDiem VARCHAR(200) , FOREIGN KEY (MaBaiHat) REFERENCES BaiHat(MaBaiHat))");
+        database.QueryData("CREATE TABLE IF NOT EXISTS CaSi(MaCaSi VARCHAR(200) PRIMARY KEY NOT NULL, TenCaSi VARCHAR(200) )"); //
+    }
+
+    private void getList_NhacSi() {
+        Cursor data = database.GetData("SELECT * FROM NhacSi");
+        MusicianArrayList.clear();
+        while (data.moveToNext()) {
+            String id = data.getString(0);
+            String name = data.getString(1);
+
+            MusicianArrayList.add(new NhacSiModel(id, name));
+        }
     }
 
 

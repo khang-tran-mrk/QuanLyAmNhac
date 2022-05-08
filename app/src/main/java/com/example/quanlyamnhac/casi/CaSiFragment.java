@@ -50,7 +50,6 @@ public class CaSiFragment extends Fragment {
         caSiArrayList = new ArrayList<>();
         CustomAdapterCaSi adapter = new CustomAdapterCaSi(getContext(), R.layout.casi_item_list_view, caSiArrayList);
         lv_tablecasi.setAdapter(adapter);
-
         database = new Database(getContext(), "QuanLyAmNhac.sqlite", null, 1);
         Cursor data = database.GetData("SELECT * FROM CaSi");
         caSiArrayList.clear();

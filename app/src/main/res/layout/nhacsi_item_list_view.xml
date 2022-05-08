@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:background="@color/primary"
@@ -9,7 +10,7 @@
 
     <TextView
         android:id="@+id/tv_id"
-        android:layout_width="100dp"
+        android:layout_width="90dp"
         android:layout_height="40dp"
         android:layout_weight="2"
         android:background="@drawable/border_table"
@@ -23,13 +24,23 @@
     <TextView
 
         android:id="@+id/tv_name"
-        android:layout_width="400dp"
+        android:layout_width="170dp"
         android:layout_height="40dp"
         android:layout_weight="8"
         android:background="@drawable/border_table"
         android:padding="5dp"
         android:text="Pineapple"
-        android:textSize="12dp"
-       />
+        android:textSize="12dp" />
+
+    <ImageView
+        android:id="@+id/im_image"
+        android:layout_width="230dp"
+        android:layout_height="40dp"
+        android:layout_weight="2"
+        android:background="@drawable/border_table"
+        android:padding="5dp"
+        android:text="Pineapple"
+        app:srcCompat="@drawable/add" />
+
 
 </LinearLayout>

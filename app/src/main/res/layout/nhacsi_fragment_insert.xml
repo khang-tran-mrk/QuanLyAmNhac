@@ -42,6 +42,23 @@
         android:hint="Tên nhạc sĩ"
         android:paddingLeft="20dp" />
 
+    <ImageButton
+        android:id="@+id/imageUpload"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:background="@color/teal_700"
+
+        android:src="@android:drawable/ic_menu_upload"
+        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+
+    <ImageButton
+
+        android:id="@+id/insertImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
+        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

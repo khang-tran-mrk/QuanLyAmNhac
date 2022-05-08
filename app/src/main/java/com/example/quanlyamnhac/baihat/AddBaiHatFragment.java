@@ -78,8 +78,8 @@ public class AddBaiHatFragment extends Fragment implements OnClickListener {
 
                 System.out.println("test id  ne =" + add_mans.getSelectedItem().toString());
 
-                mans = add_mans.getSelectedItem().toString();
-                tenns.setText(selectName(mans));
+                mans = add_mans.getSelectedItem().toString(); // =note luu lai cai ma
+                tenns.setText(selectName(mans)); // lua lai
             }
 
             @Override

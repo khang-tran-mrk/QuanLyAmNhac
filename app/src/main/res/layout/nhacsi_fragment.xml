@@ -47,11 +47,17 @@
                 android:text="Mã nhạc sĩ" />
 
             <TextView
-                android:layout_width="320dp"
+                android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:background="@drawable/border_th_table"
                 android:padding="5dp"
                 android:text="Tên nhạc sĩ" />
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:background="@drawable/border_th_table"
+                android:padding="5dp"
+                android:text="Ảnh nhạc sĩ" />
 
 
         </LinearLayout>
@@ -65,8 +71,7 @@
             android:background="@drawable/border_table"
 
             android:divider="@color/primary"
-            android:dividerHeight="10dp"
-             />
+            android:dividerHeight="10dp" />
     </LinearLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

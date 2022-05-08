@@ -3,8 +3,22 @@ package com.example.quanlyamnhac.model;
 public class NhacSiModel {
     private String id;
     private String name;
-
+    private  byte[] HinhAnh;
     public NhacSiModel() {
+    }
+
+    public NhacSiModel(String id, String name, byte[] hinhAnh) {
+        this.id = id;
+        this.name = name;
+        HinhAnh = hinhAnh;
+    }
+
+    public byte[] getHinhAnh() {
+        return HinhAnh;
+    }
+
+    public void setHinhAnh(byte[] hinhAnh) {
+        HinhAnh = hinhAnh;
     }
 
     public NhacSiModel(String id, String name) {

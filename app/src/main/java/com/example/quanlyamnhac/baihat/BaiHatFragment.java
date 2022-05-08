@@ -67,7 +67,7 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
         adapter = new CustomAdapterBaiHat(getContext(), R.layout.baihat_item_list_view, baiHatArrayList);
         lv_tableBaiHat.setAdapter(adapter);
 
-        database.QueryData("CREATE TABLE IF NOT EXISTS BaiHat(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaBaiHat VARCHAR(200), TenBaiHat VARCHAR(200), NamSangTac VARCHAR(200), MaNhacSi VARCHAR(200), foreign key (MaNhacSi) references NhacSi)");
+        //database.QueryData("CREATE TABLE IF NOT EXISTS BaiHat(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaBaiHat VARCHAR(200), TenBaiHat VARCHAR(200), NamSangTac VARCHAR(200), MaNhacSi VARCHAR(200), foreign key (MaNhacSi) references NhacSi)");
 
         Cursor dataBaiHat = database.GetData("SELECT * FROM BaiHat ");
         baiHatArrayList.clear();
@@ -138,7 +138,7 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         up_mbh.setText(baiHatArrayList.get(position).getMaBaiHat());
                         up_tbh.setText(baiHatArrayList.get(position).getTenBaiHat());
                         up_nst.setText(baiHatArrayList.get(position).getNamSangTac());
-                      //  up_tns.setText(baiHatArrayList.get(position).getMaBaiHat());
+                        //  up_tns.setText(baiHatArrayList.get(position).getMaBaiHat());
 
                         sp_manhacsi = new ArrayList<>();
                         database = new Database(getContext(), "QuanLyAmNhac.sqlite", null, 1);
@@ -150,9 +150,9 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                             sp_manhacsi.add(ma);
                         }
-                        ArrayAdapter adapter = new ArrayAdapter(root.getContext(), android.R.layout.simple_spinner_item, sp_manhacsi);
+                        ArrayAdapter adapter_ns = new ArrayAdapter(root.getContext(), android.R.layout.simple_spinner_item, sp_manhacsi);
 
-                        up_mns.setAdapter(adapter);
+                        up_mns.setAdapter(adapter_ns);
                         up_mns.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -166,7 +166,6 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                             }
                         });
-
 
 
                         AlertDialog alertDialog = fix.create();
@@ -183,14 +182,16 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
                                         ", NamSangTac = '" + up_nst.getText().toString() + "'" +
                                         ", MaNhacSi = '" + mans + "'" +
                                         " WHERE MaBaiHat = '" + up_mbh.getText().toString() + "'");
-                                baiHatArrayList.set(position,new BaiHatModel(baiHatArrayList.get(position).getMaBaiHat(), up_tbh.getText().toString(),up_nst.getText().toString(),mans));
+                                baiHatArrayList.set(position, new BaiHatModel(baiHatArrayList.get(position).getMaBaiHat(), up_tbh.getText().toString(), up_nst.getText().toString(), mans));
 
                                 alertDialog.dismiss();
+
+                                adapter.notifyDataSetChanged();
 
                             }
                         });
 
-                        adapter.notifyDataSetChanged();
+
 
 
                     }
@@ -214,14 +215,16 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         return root;
     }
+
     public String selectName(String id) {
-        Cursor datans = database.GetData("SELECT * FROM NhacSi where MaNhacSi = '"+ id +"'");
+        Cursor datans = database.GetData("SELECT * FROM NhacSi where MaNhacSi = '" + id + "'");
         while (datans.moveToNext()) {
             Log.d("abcdef", datans.getString(1));
             return datans.getString(1);
         }
         return "";
     }
+
     private void setupSearchView() {
         search_bh.setIconifiedByDefault(false);
         search_bh.setOnQueryTextListener(this);
