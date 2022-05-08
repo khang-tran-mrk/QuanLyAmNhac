@@ -45,7 +45,6 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
     ListView lv_tableBaiHat;
 
     SwipeRefreshLayout swiperefresh_bh;
-    SearchView search_bh;
     String mans;
     ArrayList<NhacSiModel> arrayNhacSi;
     ArrayList sp_manhacsi;
@@ -56,31 +55,21 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
         View root = inflater.inflate(R.layout.baihat_fragment, container, false);
         lv_tableBaiHat = root.findViewById(R.id.lv_tableBaiHat);
         lv_tableBaiHat.setLongClickable(true);
-        search_bh = root.findViewById(R.id.search_bh);
         arrayNhacSi = new ArrayList<>();
-        setupSearchView();
+
+
 
         swiperefresh_bh = (SwipeRefreshLayout) root.findViewById(R.id.swiperefresh_bh);
         database = new Database(getContext(), "QuanLyAmNhac.sqlite", null, 1);
 
+        //set list bai hat
         baiHatArrayList = new ArrayList<>();
         adapter = new CustomAdapterBaiHat(getContext(), R.layout.baihat_item_list_view, baiHatArrayList);
         lv_tableBaiHat.setAdapter(adapter);
-
-        //database.QueryData("CREATE TABLE IF NOT EXISTS BaiHat(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaBaiHat VARCHAR(200), TenBaiHat VARCHAR(200), NamSangTac VARCHAR(200), MaNhacSi VARCHAR(200), foreign key (MaNhacSi) references NhacSi)");
-
-        Cursor dataBaiHat = database.GetData("SELECT * FROM BaiHat ");
-        baiHatArrayList.clear();
-
-        while (dataBaiHat.moveToNext()) {
-            String mabaihat = dataBaiHat.getString(0);
-            String tenbaihat = dataBaiHat.getString(1);
-            String namsangtac = dataBaiHat.getString(2);
-            String mans = dataBaiHat.getString(3);
-            baiHatArrayList.add(new BaiHatModel(mabaihat, tenbaihat, namsangtac, mans));
-        }
-
+        getList_BaiHat();
         adapter.notifyDataSetChanged();
+
+
         swiperefresh_bh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -105,6 +94,7 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
         });
 
 
+        //set event click on row of table
         lv_tableBaiHat.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -212,6 +202,42 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
+        //Search
+        androidx.appcompat.widget.SearchView search_bar = root.findViewById(R.id.search_bar);
+        search_bar.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                CustomAdapterBaiHat  new_adapter;
+                getList_BaiHat();
+
+                if(newText.equals("") || newText.equals(null)){
+                    lv_tableBaiHat.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    return false;
+                }
+
+                ArrayList<BaiHatModel> search_result = new ArrayList<BaiHatModel>();
+                baiHatArrayList.forEach(item -> {
+                    if(
+                            item.getMaBaiHat().toLowerCase().contains(newText.toLowerCase()) ||
+                                    item.getTenBaiHat().toLowerCase().contains(newText.toLowerCase()) ||
+                                    item.getNamSangTac().toLowerCase().contains(newText.toLowerCase()) ||
+                                    item.getManhacsi().toLowerCase().contains(newText.toLowerCase())
+                    ) search_result.add(item);
+                });
+                baiHatArrayList = search_result;
+                new_adapter = new CustomAdapterBaiHat(getContext(), R.layout.baihat_item_list_view, search_result);
+                lv_tableBaiHat.setAdapter(new_adapter);
+                new_adapter.notifyDataSetChanged();
+
+                return false;
+            }
+        });
 
         return root;
     }
@@ -225,11 +251,17 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return "";
     }
 
-    private void setupSearchView() {
-        search_bh.setIconifiedByDefault(false);
-        search_bh.setOnQueryTextListener(this);
-        search_bh.setSubmitButtonEnabled(true);
-        search_bh.setQueryHint("Search Here");
+    private void getList_BaiHat(){
+        Cursor dataBaiHat = database.GetData("SELECT * FROM BaiHat ");
+        baiHatArrayList.clear();
+
+        while (dataBaiHat.moveToNext()) {
+            String mabaihat = dataBaiHat.getString(0);
+            String tenbaihat = dataBaiHat.getString(1);
+            String namsangtac = dataBaiHat.getString(2);
+            String mans = dataBaiHat.getString(3);
+            baiHatArrayList.add(new BaiHatModel(mabaihat, tenbaihat, namsangtac, mans));
+        }
     }
 
     public boolean onQueryTextChange(String newText) {

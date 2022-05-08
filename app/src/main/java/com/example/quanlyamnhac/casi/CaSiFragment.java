@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -51,17 +52,8 @@ public class CaSiFragment extends Fragment {
         CustomAdapterCaSi adapter = new CustomAdapterCaSi(getContext(), R.layout.casi_item_list_view, caSiArrayList);
         lv_tablecasi.setAdapter(adapter);
         database = new Database(getContext(), "QuanLyAmNhac.sqlite", null, 1);
-        Cursor data = database.GetData("SELECT * FROM CaSi");
-        caSiArrayList.clear();
-
-        while (data.moveToNext()) {
-            String id = data.getString(0);
-            String name = data.getString(1);
-
-            caSiArrayList.add(new CaSiModel(id, name));
-        }
-
-
+        getListCasi();
+        adapter.notifyDataSetChanged();
 
         lv_tablecasi.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -102,15 +94,14 @@ public class CaSiFragment extends Fragment {
                         btn_up_ns.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Log.d("abc","" + position);
-                                Log.d("abc","" + up_tencasi.getText());
+                                Log.d("abc", "" + position);
+                                Log.d("abc", "" + up_tencasi.getText());
                                 database.QueryData("UPDATE CaSi SET TenCaSi  = '" + up_tencasi.getText().toString() + "' where MaCaSi='" + caSiArrayList.get(position).getMaCaSi() + "'");
                                 String name = up_tencasi.getText().toString();
-                                caSiArrayList.set(position,new CaSiModel(caSiArrayList.get(position).getMaCaSi(), name));
+                                caSiArrayList.set(position, new CaSiModel(caSiArrayList.get(position).getMaCaSi(), name));
                                 adapter.notifyDataSetChanged();
 
                                 alertDialog.dismiss();
-
 
 
                             }
@@ -120,7 +111,6 @@ public class CaSiFragment extends Fragment {
                     }
 
 
-
                 });
 
                 alert.setNegativeButton("Xoá", new DialogInterface.OnClickListener() {
@@ -128,7 +118,7 @@ public class CaSiFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                         System.out.println("xoa ne !! = " + caSiArrayList.get(position).getMaCaSi());
-                        database.QueryData("DELETE FROM CaSi WHERE MaCaSi   = '" + caSiArrayList.get(position).getMaCaSi() +"'");
+                        database.QueryData("DELETE FROM CaSi WHERE MaCaSi   = '" + caSiArrayList.get(position).getMaCaSi() + "'");
                         caSiArrayList.remove(position);
                         adapter.notifyDataSetChanged();
                     }
@@ -138,8 +128,55 @@ public class CaSiFragment extends Fragment {
             }
         });
 
+        //Search
+        SearchView search_bar = root.findViewById(R.id.search_bar);
+        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                CustomAdapterCaSi new_adapter;
+                getListCasi();
+                if (newText.equals("") || newText.equals(null)) {
+
+                    lv_tablecasi.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    return false;
+                }
+
+
+                ArrayList<CaSiModel> search_result = new ArrayList<CaSiModel>();
+                caSiArrayList.forEach(item -> {
+                    if (
+                            item.getMaCaSi().toLowerCase().contains(newText.toLowerCase()) ||
+                                    item.getTenCaSi().toLowerCase().contains(newText.toLowerCase())
+                    )
+                        search_result.add(item);
+                });
+                caSiArrayList = search_result;
+                new_adapter = new CustomAdapterCaSi(getContext(), R.layout.casi_item_list_view, search_result);
+                lv_tablecasi.setAdapter(new_adapter);
+
+                return false;
+            }
+        });
 
         return root;
+    }
+
+    private void getListCasi() {
+        Cursor data = database.GetData("SELECT * FROM CaSi");
+        caSiArrayList.clear();
+
+        while (data.moveToNext()) {
+            String id = data.getString(0);
+            String name = data.getString(1);
+
+            caSiArrayList.add(new CaSiModel(id, name));
+        }
     }
 /*
     public void getDataBieuDien() {

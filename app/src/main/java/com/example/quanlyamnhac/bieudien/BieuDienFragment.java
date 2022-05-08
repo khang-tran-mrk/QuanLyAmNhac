@@ -17,12 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import com.example.quanlyamnhac.Database;
 import com.example.quanlyamnhac.R;
 import com.example.quanlyamnhac.adapter.CustomAdapterBieuDien;
+import com.example.quanlyamnhac.adapter.CustomAdapterNhacSi;
 import com.example.quanlyamnhac.model.BieuDienModel;
+import com.example.quanlyamnhac.model.NhacSiModel;
 
 import java.util.ArrayList;
 
@@ -174,6 +177,47 @@ public class BieuDienFragment extends Fragment {
                 return true;
             }
         });
+
+        //Search
+        SearchView search_bar = root.findViewById(R.id.search_bar);
+        CustomAdapterBieuDien adapter = new CustomAdapterBieuDien(getContext(), R.layout.bieudien_item_list_view, bieuDienArrayList);
+        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                CustomAdapterNhacSi new_adapter;
+                getDataBieuDien();
+                if(newText.equals("") || newText.equals(null)){
+
+                    lvTableBieuDien.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    return false;
+                }
+
+
+                ArrayList<BieuDienModel> search_result = new ArrayList<BieuDienModel>();
+                bieuDienArrayList.forEach(item -> {
+                    if (
+                            Integer.valueOf(item.getMaBieuDien()).toString().toLowerCase().contains(newText.toLowerCase()) ||
+                                    item.getNgayBieuDien().toLowerCase().contains(newText.toLowerCase()) ||
+                                    item.getDiaDiem().toLowerCase().contains(newText.toLowerCase()) ||
+                                    item.getMaBaiHat().toLowerCase().contains(newText.toLowerCase()) ||
+                                    item.getMaCaSi().toLowerCase().contains(newText.toLowerCase())
+                    )
+                        search_result.add(item);
+                });
+                bieuDienArrayList = search_result;
+                new_adapter = new CustomAdapterNhacSi(getContext(), R.layout.nhacsi_item_list_view, search_result);
+                lvTableBieuDien.setAdapter(new_adapter);
+
+                return false;
+            }
+        });
+
 
 
         return root;

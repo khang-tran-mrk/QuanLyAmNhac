@@ -45,7 +45,7 @@ public class NhacSiFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.nhacsi_fragment, container, false);
         final ListView lv_tablemusician = root.findViewById(R.id.lv_tablemusician);
-        SearchView search_bar = root.findViewById(R.id.search_bar);
+
 
         MusicianArrayList = new ArrayList<>();
         CustomAdapterNhacSi adapter = new CustomAdapterNhacSi(getContext(), R.layout.nhacsi_item_list_view, MusicianArrayList);
@@ -226,6 +226,7 @@ public class NhacSiFragment extends Fragment {
         });
 
         //Search
+        SearchView search_bar = root.findViewById(R.id.search_bar);
         search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -235,9 +236,9 @@ public class NhacSiFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 CustomAdapterNhacSi new_adapter;
-
+                getList_NhacSi();
                 if(newText.equals("") || newText.equals(null)){
-                    getList_NhacSi();
+
                     lv_tablemusician.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     return false;

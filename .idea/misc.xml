@@ -3,7 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Coding/QuanLyAmNhac/app/src/main/res/layout/baihat_fragment.xml" value="0.22826086956521738" />
+        <entry key="..\:/Coding/QuanLyAmNhac/app/src/main/res/layout/bieudien_dialog_select.xml" value="0.22826086956521738" />
+        <entry key="..\:/Coding/QuanLyAmNhac/app/src/main/res/layout/bieudien_fragment_home.xml" value="0.22826086956521738" />
+        <entry key="..\:/Coding/QuanLyAmNhac/app/src/main/res/layout/bieudien_item_list_view.xml" value="0.22826086956521738" />
+        <entry key="..\:/Coding/QuanLyAmNhac/app/src/main/res/layout/casi_fragment.xml" value="0.22826086956521738" />
+        <entry key="..\:/Coding/QuanLyAmNhac/app/src/main/res/layout/casi_fragment_update.xml" value="0.22826086956521738" />
         <entry key="..\:/Coding/QuanLyAmNhac/app/src/main/res/layout/nhacsi_fragment.xml" value="0.1" />
+        <entry key="..\:/Coding/QuanLyAmNhac/app/src/main/res/layout/nhacsi_item_list_view.xml" value="0.22826086956521738" />
       </map>
     </option>
   </component>
