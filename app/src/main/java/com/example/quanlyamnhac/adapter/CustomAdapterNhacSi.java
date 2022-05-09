@@ -46,10 +46,12 @@ import java.util.ArrayList;
         byte[] hinhAnh =    musicianDatabase.getHinhAnh();
         System.out.println("hinh anh " + hinhAnh);
         if (hinhAnh!=null){
+            System.out.println("1 " );
             Bitmap bitmap = BitmapFactory.decodeByteArray(hinhAnh,0,hinhAnh.length);
             im_image.setImageBitmap(bitmap);
-        }
 
+        }
+        System.out.println("image " + im_image);
         return  convertView;
 
 

@@ -1,36 +1,29 @@
 package com.example.quanlyamnhac.casi;
 
 import android.app.AlertDialog;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
 
 import com.example.quanlyamnhac.Database;
-
 import com.example.quanlyamnhac.R;
-
 import com.example.quanlyamnhac.adapter.CustomAdapterCaSi;
-
 import com.example.quanlyamnhac.model.CaSiModel;
-
 
 import java.util.ArrayList;
 
@@ -116,6 +109,13 @@ public class CaSiFragment extends Fragment {
                 alert.setNegativeButton("Xoá", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        Cursor data = database.GetData("SELECT * FROM BieuDien where MaCaSi = '" + caSiArrayList.get(position).getMaCaSi() + "'");
+                        if(data.moveToNext()) {
+                            Toast.makeText(getContext(), "Lỗi khoá ngoại! Không thể xoá!!!", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
 
                         System.out.println("xoa ne !! = " + caSiArrayList.get(position).getMaCaSi());
                         database.QueryData("DELETE FROM CaSi WHERE MaCaSi   = '" + caSiArrayList.get(position).getMaCaSi() + "'");

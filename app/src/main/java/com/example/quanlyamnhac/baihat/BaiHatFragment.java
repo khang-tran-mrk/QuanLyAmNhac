@@ -20,19 +20,15 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.quanlyamnhac.Database;
-
 import com.example.quanlyamnhac.R;
 import com.example.quanlyamnhac.adapter.CustomAdapterBaiHat;
-
 import com.example.quanlyamnhac.model.BaiHatModel;
 import com.example.quanlyamnhac.model.NhacSiModel;
-
 
 import java.util.ArrayList;
 
@@ -78,15 +74,7 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 adapter = new CustomAdapterBaiHat(getContext(), R.layout.baihat_item_list_view, baiHatArrayList);
                 lv_tableBaiHat.setAdapter(adapter);
 
-                Cursor dataBaiHat = database.GetData("SELECT * FROM BaiHat ");
-                baiHatArrayList.clear();
-                while (dataBaiHat.moveToNext()) {
-                    String mabaihat = dataBaiHat.getString(0);
-                    String tenbaihat = dataBaiHat.getString(1);
-                    String namsangtac = dataBaiHat.getString(2);
-                    String mans = dataBaiHat.getString(3);
-                    baiHatArrayList.add(new BaiHatModel(mabaihat, tenbaihat, namsangtac, mans));
-                }
+                getList_BaiHat();
 
                 adapter.notifyDataSetChanged();
                 swiperefresh_bh.setRefreshing(false);
@@ -189,6 +177,11 @@ public class BaiHatFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 alert.setNegativeButton("Xoá", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Cursor data = database.GetData("SELECT * FROM BieuDien where MaBaiHat = '" + baiHatArrayList.get(position).getMaBaiHat() + "'");
+                        if(data.moveToNext()) {
+                            Toast.makeText(getContext(), "Lỗi khoá ngoại! Không thể xoá!!!", Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
 
                         database.QueryData("DELETE FROM BaiHat WHERE MaBaiHat = '" + baiHatArrayList.get(position).getMaBaiHat() + "'");

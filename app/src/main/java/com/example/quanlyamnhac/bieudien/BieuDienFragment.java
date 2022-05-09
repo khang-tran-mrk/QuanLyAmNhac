@@ -25,7 +25,6 @@ import com.example.quanlyamnhac.R;
 import com.example.quanlyamnhac.adapter.CustomAdapterBieuDien;
 import com.example.quanlyamnhac.adapter.CustomAdapterNhacSi;
 import com.example.quanlyamnhac.model.BieuDienModel;
-import com.example.quanlyamnhac.model.NhacSiModel;
 
 import java.util.ArrayList;
 
@@ -33,10 +32,12 @@ public class BieuDienFragment extends Fragment {
 
     Database database;
     ListView lvTableBieuDien;
-    String mabh,macs;
-    Spinner sp_edt_macasi,sp_edt_mabh;
-    ArrayList sp_macasi,sp_mabaihat;
+    String mabh, macs;
+    Spinner sp_edt_macasi, sp_edt_mabh;
+    ArrayList sp_macasi, sp_mabaihat;
     ArrayList<BieuDienModel> bieuDienArrayList;
+
+    final String date_regex = "^([0-2][0-9]||3[0-1])/(0[0-9]||1[0-2])/([0-9][0-9])?[0-9][0-9]$" ;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -88,7 +89,7 @@ public class BieuDienFragment extends Fragment {
                         sp_edt_macasi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                 macs = sp_edt_macasi.getSelectedItem().toString();
+                                macs = sp_edt_macasi.getSelectedItem().toString();
                                 edtTencasi.setText(selectNameCS(macs));
                             }
 
@@ -103,7 +104,7 @@ public class BieuDienFragment extends Fragment {
                         sp_edt_mabh.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                 mabh = sp_edt_mabh.getSelectedItem().toString();
+                                mabh = sp_edt_mabh.getSelectedItem().toString();
                                 edtTenbaihat.setText(selectNameBH(mabh));
                             }
 
@@ -133,10 +134,15 @@ public class BieuDienFragment extends Fragment {
 
                                 String diadiem = edtDiadiem.getText().toString();
                                 String ngay = edtNgaybd.getText().toString();
-                                if ( diadiem.equals("") || ngay.equals("")) {
+
+                                if( !ngay.matches(date_regex)){
+                                    Toast.makeText(getContext(), "Định dạng ngày phải là DD/MM/YYYY", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                if (diadiem.equals("") || ngay.equals("")) {
                                     Toast.makeText(getContext(), "Vui long dien thong tin day du!", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    database.QueryData("UPDATE BieuDien SET MaBaiHat = '" + mabh +"',MaCaSi ='"+ macs + "' ,NgayBieuDien = '" + ngay + "' ,DiaDiem = '" + diadiem + "' WHERE MaBieuDien = '" + ma + "'");
+                                    database.QueryData("UPDATE BieuDien SET MaBaiHat = '" + mabh + "',MaCaSi ='" + macs + "' ,NgayBieuDien = '" + ngay + "' ,DiaDiem = '" + diadiem + "' WHERE MaBieuDien = '" + ma + "'");
                                     getDataBieuDien();
                                     Toast.makeText(getContext(), "Cập nhập thành công!", Toast.LENGTH_SHORT).show();
                                 }
@@ -164,7 +170,7 @@ public class BieuDienFragment extends Fragment {
                                 BieuDienModel db = bieuDienArrayList.get(i);
 
                                 System.out.println("v la = " + db.getMaCaSi());
-                                database.QueryData("DELETE FROM BieuDien WHERE MaBieuDien = '" +db.getMaBieuDien() +"'");
+                                database.QueryData("DELETE FROM BieuDien WHERE MaBieuDien = '" + db.getMaBieuDien() + "'");
                                 bieuDienArrayList.remove(i);
                                 getDataBieuDien();
                                 Toast.makeText(getContext(), "Xoa thanh cong!", Toast.LENGTH_SHORT).show();
@@ -189,9 +195,9 @@ public class BieuDienFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                CustomAdapterNhacSi new_adapter;
+                CustomAdapterBieuDien new_adapter;
                 getDataBieuDien();
-                if(newText.equals("") || newText.equals(null)){
+                if (newText.equals("") || newText.equals(null)) {
 
                     lvTableBieuDien.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -211,13 +217,13 @@ public class BieuDienFragment extends Fragment {
                         search_result.add(item);
                 });
                 bieuDienArrayList = search_result;
-                new_adapter = new CustomAdapterNhacSi(getContext(), R.layout.nhacsi_item_list_view, search_result);
+                new_adapter = new CustomAdapterBieuDien(getContext(), R.layout.bieudien_item_list_view, search_result);
                 lvTableBieuDien.setAdapter(new_adapter);
+                new_adapter.notifyDataSetChanged();
 
                 return false;
             }
         });
-
 
 
         return root;
@@ -241,7 +247,7 @@ public class BieuDienFragment extends Fragment {
     }
 
     public String selectNameBH(String id) {
-        Cursor databh = database.GetData("SELECT * FROM BaiHat where MaBaiHat = '"+ id +"'");
+        Cursor databh = database.GetData("SELECT * FROM BaiHat where MaBaiHat = '" + id + "'");
         while (databh.moveToNext()) {
             Log.d("abcdef", databh.getString(1));
             return databh.getString(1);
@@ -250,7 +256,7 @@ public class BieuDienFragment extends Fragment {
     }
 
     public String selectNameCS(String id) {
-        Cursor datacs = database.GetData("SELECT * FROM CaSi where MaCaSi = '"+ id +"'");
+        Cursor datacs = database.GetData("SELECT * FROM CaSi where MaCaSi = '" + id + "'");
         while (datacs.moveToNext()) {
             Log.d("abcdef", datacs.getString(1));
             return datacs.getString(1);

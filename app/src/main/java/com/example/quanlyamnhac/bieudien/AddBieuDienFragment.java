@@ -36,7 +36,10 @@ public class AddBieuDienFragment extends Fragment {
     EditText edt_ins_tenbh, edt_ins_diadiem, edt_ins_ngaybd,edt_ins_tencs;
     Spinner sp_ins_mabh,sp_ins_macs;
     String macs,mabh;
+
+    final String date_regex = "^([0-2][0-9]||3[0-1])/(0[0-9]||1[0-2])/([0-9][0-9])?[0-9][0-9]$" ;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View root = inflater.inflate(R.layout.bieudien_fragment_insert, container, false);
 
         btnInsert = root.findViewById(R.id.insert_thongtin);
@@ -49,6 +52,7 @@ public class AddBieuDienFragment extends Fragment {
 
         edt_ins_diadiem = root.findViewById(R.id.insert_diadiem);
         edt_ins_ngaybd = root.findViewById(R.id.insert_ngaybd);
+
         khoitao();
 
         ArrayAdapter adaptercs = new ArrayAdapter(root.getContext(), android.R.layout.simple_spinner_item, sp_macs);
@@ -100,6 +104,11 @@ public class AddBieuDienFragment extends Fragment {
                         ma_bd = cr.getInt(0) + 1;
                         System.out.println("ma ma_bd = "+ ma_bd);
                     }*/
+
+                    if( !ngay.matches(date_regex)){
+                        Toast.makeText(getContext(), "Định dạng ngày phải là DD/MM/YYYY", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     System.out.println("ma bh = "+ mabh);
                     System.out.println("ma cs = "+ macs);

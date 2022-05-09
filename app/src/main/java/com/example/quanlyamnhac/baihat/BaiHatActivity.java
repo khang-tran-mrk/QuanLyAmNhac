@@ -18,6 +18,7 @@ import com.example.quanlyamnhac.MainActivity;
 import com.example.quanlyamnhac.R;
 import com.example.quanlyamnhac.bieudien.BieuDienActivity;
 import com.example.quanlyamnhac.casi.CaSiActivity;
+import com.example.quanlyamnhac.thongke.ThongkeFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class BaiHatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -108,6 +109,16 @@ public class BaiHatActivity extends AppCompatActivity implements NavigationView.
                 Intent casi = new Intent(BaiHatActivity.this, CaSiActivity.class);
                 casi.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(casi);
+                break;
+            case R.id.nav_thongke:
+                getSupportActionBar().setTitle("Thống Kê");
+                ThongkeFragment thongkeFragment = new ThongkeFragment();
+                FragmentManager FragManager = getSupportFragmentManager();
+                FragmentTransaction FragTrans = FragManager.beginTransaction();
+                FragTrans.replace(R.id.baihat_fragment, thongkeFragment);
+                FragTrans.commit();
+                baihat_back.setVisibility(View.INVISIBLE);
+                baihat_fab.setVisibility(View.INVISIBLE);
                 break;
 //            case R.id.nav_thongke:
 //                Intent thongke = new Intent(BaiHatActivity.this, ThongKeActivity.class);

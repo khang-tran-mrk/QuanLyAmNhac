@@ -43,6 +43,18 @@
 
         android:hint="Tên nhạc sĩ"
         android:paddingLeft="20dp" />
+    <ImageView
+        android:id="@+id/editImage"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/imageBtn"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_radius"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -66,6 +78,8 @@
             android:background="@drawable/border_radius"
             android:text="Chỉnh sửa" />
     </LinearLayout>
+
+
 
 
 </LinearLayout>

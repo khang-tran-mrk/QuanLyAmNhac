@@ -3,6 +3,9 @@ package com.example.quanlyamnhac.nhacsi;
 
 import android.app.ActivityManager;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -75,24 +78,35 @@ public class AddNhacSiFragment extends Fragment {
                 String ma = insertma.getText().toString();
 
                 // chuyen data image -> byte[]
-                if (insertImage == null){
-                    BitmapDrawable bitmapDrawable = (BitmapDrawable) insertImage.getDrawable();
-                    Bitmap bitmap = bitmapDrawable.getBitmap();
-                    ByteArrayOutputStream byteArr = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArr);
-                    byte[] hinhanh= byteArr.toByteArray();
-                }
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) insertImage.getDrawable();
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                ByteArrayOutputStream byteArr = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArr);
+                byte[] hinhanh= byteArr.toByteArray();
 
-//                System.out.println("hinh anh la "+ hinhanh);
+                Cursor data = database.GetData("SELECT * FROM NhacSi where MaNhacSi = '" + ma + "'");
+                if(data.moveToNext()) {
+                    Toast.makeText(getContext(), "Mã Nhạc Sĩ đã tồn tại", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 if (name.equals("")) {
                     Toast.makeText(getContext(), "Vui long nhap ten", Toast.LENGTH_LONG).show();
                 }
                 if (ma.equals("")) {
                     Toast.makeText(getContext(), "Vui long nhap ma nhac si", Toast.LENGTH_LONG).show();
                 } else {
+
+                        SQLiteDatabase db = database.getWritableDatabase();
+                        String sql=  "INSERT INTO NhacSi VALUES(?,?,?)";
+                        SQLiteStatement statement = db.compileStatement(sql);
+                        statement.clearBindings();
+                        statement.bindString(1,ma);
+                        statement.bindString(2,name);
+                        statement.bindBlob(3,hinhanh);
+                        statement.executeInsert();
                     // database.QueryData("INSERT INTO Musician values ( null, '"+ name +" )");
-//                    database.QueryData("INSERT INTO NhacSi VALUES('"+ma+"','" + name + "','" + hinhanh+"')");
-                    database.QueryData("INSERT INTO NhacSi VALUES('"+ma+"','" + name + "','" + null+"')");
+                    //database.QueryData("INSERT INTO NhacSi VALUES('"+ma+"','" + name + "','" + hinhanh+"')");
+
 
                     Toast.makeText(getContext(), "Đã Thêm", Toast.LENGTH_LONG).show();
                     Intent nhacsi = new Intent(getContext(), MainActivity.class);
@@ -118,6 +132,7 @@ public class AddNhacSiFragment extends Fragment {
                 InputStream inputStream = getContext().getContentResolver().openInputStream(uri);
                 Bitmap  bitmap = BitmapFactory.decodeStream(inputStream);
                 insertImage.setImageBitmap(bitmap);
+                System.out.println("AAAAAAAAAAAAAAAAAAAAAA ");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {

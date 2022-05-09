@@ -1,6 +1,7 @@
 package com.example.quanlyamnhac.casi;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -51,6 +52,12 @@ public class AddCaSiFragment extends Fragment {
             public void onClick(View v) {
                 String name = editname.getText().toString();
                 String ma = editma.getText().toString();
+
+                Cursor data = database.GetData("SELECT * FROM CaSi where MaCaSi = '" + ma + "'");
+                if(data.moveToNext()) {
+                    Toast.makeText(getContext(), "Mã Ca Sĩ đã tồn tại", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 if (name.equals("")) {
                     Toast.makeText(getContext(), "Vui long nhap ten", Toast.LENGTH_LONG).show();
                 }
